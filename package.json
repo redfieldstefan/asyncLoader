@@ -13,6 +13,7 @@
     "body-parser": "^1.13.2",
     "express": "^4.13.1",
     "multer": "^1.0.1",
+    "node-pluploader": "0.0.5",
     "php-express": "0.0.2"
   }
 }
