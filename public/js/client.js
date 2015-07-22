@@ -2,7 +2,9 @@
 
 var uploader = new plupload.Uploader({
   browse_button: 'browseFiles',
-  url: '/upload'
+  url: '/upload',
+  dragdrop: true,
+  drop_element: 'drop'
 });
 
 uploader.init();
