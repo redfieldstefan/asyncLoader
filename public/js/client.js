@@ -32,10 +32,3 @@ uploader.bind('Error', function(up, err) {
 document.getElementById('start-upload').onclick = function() {
   uploader.start();
 };
-
- // if(file.percent === 100) {
- //    var fileLi = document.getElementById(file.id);
- //    fileLi.parentNode.removeChild(fileLi);
- //    html = '<li id="' + file.id + '">' + file.name + ' (' + plupload.formatSize(file.size) + ') <b></b></li>';
- //    document.getElementById('doneFileList').innerHTML += html;
- //  };
