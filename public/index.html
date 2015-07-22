@@ -1,0 +1,28 @@
+<html>
+  <head>
+    <title>Cool Async Uploader</title>
+    <link rel="stylesheet" type="text/css" href="./style.css" />
+    <script type="text/javascript" src = "./js/plupload.full.min.js"></script>
+  </head>
+  <body>
+
+    <section id="main">
+      <div class="buttons">
+        <a id="browseFiles" href="javascript:;">Select Files</a>
+        <a id="start-upload" href="javascript:;">Start Upload</a>
+      </div>
+    </section>
+
+    <section id="progress">
+      <br />
+      <h1>Ready for Upload</h1>
+      <h2 id="queued"></h2>
+      <ul id="fileList"></ul>
+      <h2 id="uploaded"></h2>
+    </section>
+    <br />
+    <pre id="console"></pre>
+
+    <script type="text/javascript" src="./js/client.js"></script>
+  </body>
+</html>

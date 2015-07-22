@@ -1,2 +1,6 @@
-js/**/*
 plupload-2.1.8/**/*
+node_modules/**/*
+npm-debug.log
+uploads/**/*
+rootkey.csv
+.env
