@@ -1,0 +1,76 @@
+body {
+  padding: 0;
+  margin: 0;
+  max-height: 100%;
+  font-family: sans-serif;
+}
+
+.buttons {
+  width: 75%;
+  margin-top: 70%;
+  margin-left: auto;
+  margin-right: auto;
+  display: block;
+}
+
+h1 {
+  text-align: center;
+  text-transform: uppercase;
+  color: #F8F8F8;
+}
+
+h2 {
+  text-align: center;
+  text-transform: uppercase;
+}
+
+a {
+  display: block;
+  width: 100%;
+  padding-top: 25px;
+  padding-bottom: 25px;
+  margin-bottom: 10px;
+  text-align: center;
+  background-color: #CC6666;
+  color: white;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+
+a:hover {
+  background-color: #FF9966;
+  color: gold;
+}
+
+ul {
+  list-style: none;
+}
+
+li {
+  font-size: 20px;
+  color: #CCFFCC;
+  text-transform: uppercase;
+}
+
+span {
+  color: gold;
+}
+
+#main {
+  padding: 0;
+  float: left;
+  height: 100%;
+  background-color: #e23f32;
+  width: 30%;
+}
+
+#progress {
+  float: left;
+  width: 70%;
+  height: 100%;
+  background-color: tomato;
+}
+
+#fileList {
+  padding-bottom: 100px;
+}
