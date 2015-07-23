@@ -24,41 +24,41 @@ uploader.bind('FilesAdded', function(up, files) {
     uploaders.push(newUploader);
     uploader.files.pop();
     filesUploading ++;
+    configUploader();
   };
-  configUploaders();
 });
 
-var configUploaders = function() {
-  for(var i = 0; i < uploaders.length; i++) {
-    var html = '';
-    html += '<li id="' + uploaders[i].files[0].id + '">' + uploaders[i].files[0].name + ' (' + plupload.formatSize(uploaders[i].files[0].size) + ') <b></b></li>';
-    document.getElementById('fileList').innerHTML += html;
+var configUploader = function() {
+  var last = uploaders.length - 1;
+  var html = '';
+  html += '<li id="' + uploaders[last].files[0].id + '">' + uploaders[last].files[0].name + ' (' + plupload.formatSize(uploaders[last].files[0].size) + ') <b></b></li>';
+  document.getElementById('fileList').innerHTML += html;
 
-    uploaders[i].bind('UploadProgress', function(up, file) {
-      document.getElementById(file.id).getElementsByTagName('b')[0].innerHTML = '<span>' + file.percent + "%</span>";
-    });
+  uploaders[last].bind('UploadProgress', function(up, file) {
+    document.getElementById(file.id).getElementsByTagName('b')[0].innerHTML = '<span>' + file.percent + "%</span>";
+  });
 
-    uploaders[i].bind('FileUploaded', function(up) {
-      filesUploaded ++;
-      filesUploading --;
-      document.getElementById('uploaded').innerHTML = 'files uploaded: <em>' + filesUploaded + '</em>';
-      document.getElementById('uploading').innerHTML = 'files uploading: <em> ' + filesUploading + '</em>';
-    });
+  uploaders[last].bind('FileUploaded', function(up) {
+    filesUploaded ++;
+    filesUploading --;
+    document.getElementById('uploaded').innerHTML = 'files uploaded: <em>' + filesUploaded + '</em>';
+    document.getElementById('uploading').innerHTML = 'files uploading: <em> ' + filesUploading + '</em>';
+    uploader[i].files.pop();
+  });
 
-    uploaders[i].bind('Error', function(up, err) {
-      document.getElementById('console').innerHTML += "\nError #" + err.code + ": " + err.message;
-    });
-  };
+  uploaders[last].bind('Error', function(up, err) {
+    document.getElementById('console').innerHTML += "\nError #" + err.code + ": " + err.message;
+  });
 };
 
-uploader.bind('Error', function(up, err) {
+  uploader.bind('Error', function(up, err) {
       document.getElementById('console').innerHTML += "\nError #" + err.code + ": " + err.message;
-    });
+  });
 
-document.getElementById('start-upload').onclick = function() {
-  for(var i = 0; i < uploaders.length; i ++) {
-    document.getElementById('uploading').innerHTML = 'files uploading: ' + filesUploading;
-    uploaders[i].start();
+  document.getElementById('start-upload').onclick = function() {
+    for(var i = 0; i < uploaders.length; i ++) {
+      document.getElementById('uploading').innerHTML = 'files uploading: ' + filesUploading;
+      uploaders[i].start();
   }
 
 };
