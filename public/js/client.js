@@ -1,13 +1,13 @@
 'use strict';
 
-var uploader = new plupload.Uploader({
+var masterUploader = new plupload.Uploader({
   browse_button: 'browseFiles',
   url: '/upload',
   dragdrop: true,
   drop_element: 'drop'
 });
 
-uploader.init();
+masterUploader.init();
 
 var filesUploading = 0;
 var filesUploaded = 0;
@@ -15,7 +15,8 @@ var workerCount = 4;
 var workerIndex = 0;
 var uploaders = [];
 
-uploader.bind('FilesAdded', function(up, files) {
+masterUploader.bind('FilesAdded', function(up, files) {
+
   if(uploaders.length === 0) {
     console.log('building workers');
     buildWorkers(workerCount);
@@ -26,7 +27,7 @@ uploader.bind('FilesAdded', function(up, files) {
     }
     var currentWorker = uploaders[workerIndex]
     currentWorker.files.push(files[i]);
-    displayFiles(currentWorker);
+    displayFile(currentWorker);
     filesUploading++;
     workerIndex++;
   }
@@ -34,21 +35,21 @@ uploader.bind('FilesAdded', function(up, files) {
 });
 
 var buildWorkers = function(count) {
-  for(var i = 0; i < count; i++) {
-    var newUploader = new plupload.Uploader({
-      browse_button: 'hidden',
-      url: '/upload',
-    });
-    newUploader.init();
-    configUploader(newUploader);
-    uploaders.push(newUploader);
+    for(var i = 0; i < count; i++) {
+      var newUploader = new plupload.Uploader({
+        browse_button: 'hidden',
+        url: '/upload',
+      });
+      newUploader.init();
+      configUploader(newUploader);
+      uploaders.push(newUploader);
+    };
   };
-};
 
-var displayFiles = function(worker) {
-  var last = (worker.files.length - 1);
+var displayFile = function(worker) {
+  var newFile = (worker.files.length - 1);
   var html = '';
-  html += '<li id="' + worker.files[last].id + '">' + worker.files[last].name + ' (' + plupload.formatSize(worker.files[last].size) + ') <b></b></li>';
+  html += '<li id="' + worker.files[newFile].id + '">' + worker.files[newFile].name + ' (' + plupload.formatSize(worker.files[newFile].size) + ') <b></b></li>';
   document.getElementById('fileList').innerHTML += html;
 }
 
@@ -80,27 +81,3 @@ document.getElementById('start-upload').onclick = function() {
     uploaders[i].start();
   }
 };
-
- // var newUploader = new plupload.Uploader({
- //        browse_button: 'hidden',
- //        url: '/upload',
- //      });
- //      newUploader.init();
- //      newUploader.files.push(files[i]);
- //      uploaders.push(newUploader);
- //      filesUploading ++;
- //      configUploader(newUploader);
-
-
- // for(var i = 0; i < files.length; i++) {
- //      if(uploaders.length < workerCount) {
- //        var newUploader = new plupload.Uploader({
- //          browse_button: 'hidden',
- //          url: '/upload',
- //        });
- //        newUploader.init();
- //        newUploader.files.push(files[i]);
- //        uploaders.push(newUploader);
- //        filesUploading ++;
- //        configUploader(newUploader);
- //      }
