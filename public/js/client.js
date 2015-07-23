@@ -24,6 +24,7 @@ uploader.bind('FilesAdded', function(up, files) {
     uploaders.push(newUploader);
     filesUploading ++;
     configUploader(newUploader);
+    console.log(uploaders);
   };
 });
 
@@ -58,32 +59,3 @@ document.getElementById('start-upload').onclick = function() {
     uploaders[i].start();
   }
 };
-
-
-
-
-
-
-
-
-
-
-
-
-
-// uploader.bind('UploadProgress', function(up, file) {
-//   document.getElementById(file.id).getElementsByTagName('b')[0].innerHTML = '<span>' + file.percent + "%</span>";
-// });
-
-// uploader.bind('StateChanged', function(up) {
-//   document.getElementById('queued').innerHTML = 'Files Queued: ' + uploader.total.queued;
-//   document.getElementById('uploaded').innerHTML = 'uploaded: ' + uploader.total.uploaded;
-// });
-
-// uploader.bind('Error', function(up, err) {
-//   document.getElementById('console').innerHTML += "\nError #" + err.code + ": " + err.message;
-// });
-
-// document.getElementById('start-upload').onclick = function() {
-//   uploader.start();
-// };
