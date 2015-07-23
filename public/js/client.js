@@ -9,6 +9,8 @@ var uploader = new plupload.Uploader({
 
 uploader.init();
 
+var filesUploading = 0;
+var filesUploaded = 0;
 var uploaders = [];
 
 uploader.bind('FilesAdded', function(up, files) {
@@ -21,6 +23,7 @@ uploader.bind('FilesAdded', function(up, files) {
     newUploader.files.push(files[i]);
     uploaders.push(newUploader);
     uploader.files.pop();
+    filesUploading ++;
   };
   configUploaders();
 });
@@ -35,9 +38,11 @@ var configUploaders = function() {
       document.getElementById(file.id).getElementsByTagName('b')[0].innerHTML = '<span>' + file.percent + "%</span>";
     });
 
-    uploaders[i].bind('StateChanged', function(up) {
-      document.getElementById('queued').innerHTML = 'Files Queued: ' + uploader.total.queued;
-      document.getElementById('uploaded').innerHTML = 'uploaded: ' + uploader.total.uploaded;
+    uploaders[i].bind('FileUploaded', function(up) {
+      filesUploaded ++;
+      filesUploading --;
+      document.getElementById('uploaded').innerHTML = 'files uploaded: <em>' + filesUploaded + '</em>';
+      document.getElementById('uploading').innerHTML = 'files uploading: <em> ' + filesUploading + '</em>';
     });
 
     uploaders[i].bind('Error', function(up, err) {
@@ -52,6 +57,7 @@ uploader.bind('Error', function(up, err) {
 
 document.getElementById('start-upload').onclick = function() {
   for(var i = 0; i < uploaders.length; i ++) {
+    document.getElementById('uploading').innerHTML = 'files uploading: ' + filesUploading;
     uploaders[i].start();
   }
 
