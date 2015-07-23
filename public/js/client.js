@@ -16,9 +16,7 @@ var workerIndex = 0;
 var uploaders = [];
 
 masterUploader.bind('FilesAdded', function(up, files) {
-
   if(uploaders.length === 0) {
-    console.log('building workers');
     buildWorkers(workerCount);
   }
   for(var i = 0; i < files.length; i++) {
@@ -27,30 +25,29 @@ masterUploader.bind('FilesAdded', function(up, files) {
     }
     var currentWorker = uploaders[workerIndex]
     currentWorker.files.push(files[i]);
-    displayFile(currentWorker);
+    displayFile(currentWorker, 'fileList');
     filesUploading++;
     workerIndex++;
   }
-  console.log(uploaders);
 });
 
 var buildWorkers = function(count) {
-    for(var i = 0; i < count; i++) {
-      var newUploader = new plupload.Uploader({
-        browse_button: 'hidden',
-        url: '/upload',
-      });
-      newUploader.init();
-      configUploader(newUploader);
-      uploaders.push(newUploader);
-    };
+  for(var i = 0; i < count; i++) {
+    var newUploader = new plupload.Uploader({
+      browse_button: 'hidden',
+      url: '/upload'
+    });
+    newUploader.init();
+    configUploader(newUploader);
+    uploaders.push(newUploader);
   };
+};
 
-var displayFile = function(worker) {
+var displayFile = function(worker,listID) {
   var newFile = (worker.files.length - 1);
   var html = '';
   html += '<li id="' + worker.files[newFile].id + '">' + worker.files[newFile].name + ' (' + plupload.formatSize(worker.files[newFile].size) + ') <b></b></li>';
-  document.getElementById('fileList').innerHTML += html;
+  document.getElementById(listID).innerHTML += html;
 }
 
 var configUploader = function(newUploader) {
