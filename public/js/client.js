@@ -16,6 +16,7 @@ var workerIndex = 0;
 var uploaders = [];
 
 masterUploader.bind('FilesAdded', function(up, files) {
+  var workerCount = document.getElementById('workerCount').value;
   if(uploaders.length === 0) {
     buildWorkers(workerCount);
   }
@@ -26,6 +27,7 @@ masterUploader.bind('FilesAdded', function(up, files) {
     if(!uploaders[workerIndex]){
       workerIndex = 0;
     }
+    console.log(masterUploader.files)
     var currentWorker = uploaders[workerIndex];
     currentWorker.files.push(files[i]);
     displayFile(currentWorker, 'fileList');
