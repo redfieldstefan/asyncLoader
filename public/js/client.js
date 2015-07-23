@@ -11,27 +11,48 @@ uploader.init();
 
 var filesUploading = 0;
 var filesUploaded = 0;
+var workerCount = 4;
+var workerIndex = 0;
 var uploaders = [];
 
 uploader.bind('FilesAdded', function(up, files) {
-  for(var i = 0; i<files.length; i++) {
+  if(uploaders.length === 0) {
+    console.log('building workers');
+    buildWorkers(workerCount);
+  }
+  for(var i = 0; i < files.length; i++) {
+    if(workerIndex === workerCount) {
+      workerIndex = 0;
+    }
+    var currentWorker = uploaders[workerIndex]
+    currentWorker.files.push(files[i]);
+    displayFiles(currentWorker);
+    filesUploading++;
+    workerIndex++;
+  }
+  console.log(uploaders);
+});
+
+var buildWorkers = function(count) {
+  for(var i = 0; i < count; i++) {
     var newUploader = new plupload.Uploader({
       browse_button: 'hidden',
       url: '/upload',
     });
     newUploader.init();
-    newUploader.files.push(files[i]);
-    uploaders.push(newUploader);
-    filesUploading ++;
     configUploader(newUploader);
-    console.log(uploaders);
+    uploaders.push(newUploader);
   };
-});
+};
+
+var displayFiles = function(worker) {
+  var last = (worker.files.length - 1);
+  var html = '';
+  html += '<li id="' + worker.files[last].id + '">' + worker.files[last].name + ' (' + plupload.formatSize(worker.files[last].size) + ') <b></b></li>';
+  document.getElementById('fileList').innerHTML += html;
+}
 
 var configUploader = function(newUploader) {
-  var html = '';
-  html += '<li id="' + newUploader.files[0].id + '">' + newUploader.files[0].name + ' (' + plupload.formatSize(newUploader.files[0].size) + ') <b></b></li>';
-  document.getElementById('fileList').innerHTML += html;
 
   newUploader.bind('UploadProgress', function(up, file) {
     document.getElementById(file.id).getElementsByTagName('b')[0].innerHTML = '<span>' + file.percent + "%</span>";
@@ -59,3 +80,27 @@ document.getElementById('start-upload').onclick = function() {
     uploaders[i].start();
   }
 };
+
+ // var newUploader = new plupload.Uploader({
+ //        browse_button: 'hidden',
+ //        url: '/upload',
+ //      });
+ //      newUploader.init();
+ //      newUploader.files.push(files[i]);
+ //      uploaders.push(newUploader);
+ //      filesUploading ++;
+ //      configUploader(newUploader);
+
+
+ // for(var i = 0; i < files.length; i++) {
+ //      if(uploaders.length < workerCount) {
+ //        var newUploader = new plupload.Uploader({
+ //          browse_button: 'hidden',
+ //          url: '/upload',
+ //        });
+ //        newUploader.init();
+ //        newUploader.files.push(files[i]);
+ //        uploaders.push(newUploader);
+ //        filesUploading ++;
+ //        configUploader(newUploader);
+ //      }
