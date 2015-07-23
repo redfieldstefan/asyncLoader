@@ -1,37 +1,56 @@
 'use strict';
 
-var uploader = new plupload.Uploader({
+var masterUploader = new plupload.Uploader({
   browse_button: 'browseFiles',
   url: '/upload',
   dragdrop: true,
   drop_element: 'drop'
 });
 
-uploader.init();
+masterUploader.init();
 
 var filesUploading = 0;
 var filesUploaded = 0;
+var workerCount = 4;
+var workerIndex = 0;
 var uploaders = [];
 
-uploader.bind('FilesAdded', function(up, files) {
-  for(var i = 0; i<files.length; i++) {
-    var newUploader = new plupload.Uploader({
-      browse_button: 'hidden',
-      url: '/upload',
-    });
-    newUploader.init();
-    newUploader.files.push(files[i]);
-    uploaders.push(newUploader);
-    filesUploading ++;
-    configUploader(newUploader);
-    console.log(uploaders);
-  };
+masterUploader.bind('FilesAdded', function(up, files) {
+  if(uploaders.length === 0) {
+    buildWorkers(workerCount);
+  }
+  for(var i = 0; i < files.length; i++) {
+    if(workerIndex === workerCount) {
+      workerIndex = 0;
+    }
+    var currentWorker = uploaders[workerIndex]
+    currentWorker.files.push(files[i]);
+    displayFile(currentWorker, 'fileList');
+    filesUploading++;
+    workerIndex++;
+  }
 });
 
-var configUploader = function(newUploader) {
+var buildWorkers = function(count) {
+  for(var i = 0; i < count; i++) {
+    var newUploader = new plupload.Uploader({
+      browse_button: 'hidden',
+      url: '/upload'
+    });
+    newUploader.init();
+    configUploader(newUploader);
+    uploaders.push(newUploader);
+  };
+};
+
+var displayFile = function(worker,listID) {
+  var newFile = (worker.files.length - 1);
   var html = '';
-  html += '<li id="' + newUploader.files[0].id + '">' + newUploader.files[0].name + ' (' + plupload.formatSize(newUploader.files[0].size) + ') <b></b></li>';
-  document.getElementById('fileList').innerHTML += html;
+  html += '<li id="' + worker.files[newFile].id + '">' + worker.files[newFile].name + ' (' + plupload.formatSize(worker.files[newFile].size) + ') <b></b></li>';
+  document.getElementById(listID).innerHTML += html;
+}
+
+var configUploader = function(newUploader) {
 
   newUploader.bind('UploadProgress', function(up, file) {
     document.getElementById(file.id).getElementsByTagName('b')[0].innerHTML = '<span>' + file.percent + "%</span>";
