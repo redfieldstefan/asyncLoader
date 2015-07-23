@@ -11,7 +11,7 @@ masterUploader.init();
 
 var filesUploading = 0;
 var filesUploaded = 0;
-var workerCount = 4;
+var workerCount = document.getElementById('workerCount').value;
 var workerIndex = 0;
 var uploaders = [];
 
@@ -23,7 +23,10 @@ masterUploader.bind('FilesAdded', function(up, files) {
     if(workerIndex === workerCount) {
       workerIndex = 0;
     }
-    var currentWorker = uploaders[workerIndex]
+    if(!uploaders[workerIndex]){
+      workerIndex = 0;
+    }
+    var currentWorker = uploaders[workerIndex];
     currentWorker.files.push(files[i]);
     displayFile(currentWorker, 'fileList');
     filesUploading++;
@@ -66,11 +69,11 @@ var configUploader = function(newUploader) {
   newUploader.bind('Error', function(up, err) {
     document.getElementById('console').innerHTML += "\nError #" + err.code + ": " + err.message;
   });
-
-  newUploader.bind('Error', function(up, err) {
-      document.getElementById('console').innerHTML += "\nError #" + err.code + ": " + err.message;
-  });
 };
+
+masterUploader.bind('Error', function(up, err) {
+  document.getElementById('console').innerHTML += "\nError #" + err.code + ": " + err.message;
+});
 
 document.getElementById('start-upload').onclick = function() {
   for(var i = 0; i < uploaders.length; i ++) {
