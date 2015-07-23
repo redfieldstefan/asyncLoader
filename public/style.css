@@ -26,6 +26,10 @@ body {
   background-color: #FF9966;
 }
 
+#hidden {
+  display: none;
+}
+
 h1 {
   text-align: center;
   text-transform: uppercase;
