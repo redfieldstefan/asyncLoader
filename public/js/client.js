@@ -67,6 +67,7 @@ var configUploader = function(newUploader) {
     });
 
     newUploader.bind('FileUploaded', function(up) {
+        up.uploading = false;
         filesUploaded ++;
         filesUploading --;
         document.getElementById('uploaded').innerHTML = 'files uploaded: <em>' + filesUploaded + '</em>';
@@ -82,6 +83,17 @@ masterUploader.bind('Error', function(up, err) {
     document.getElementById('console').innerHTML += "\nError #" + err.code + ": " + err.message;
 });
 
+var isWorking = function(index) {
+    if(index > uploaders.length) {
+        index = 0;
+    }
+    if(uploaders[index].uploading){
+        console.log('skip');
+        return isWorking(index + 1);
+    }
+    return uploaders[index];
+};
+
 document.getElementById('start-upload').onclick = function() {
 
     for(var i = 0; i < masterUploader.files.length; i ++){
@@ -91,14 +103,11 @@ document.getElementById('start-upload').onclick = function() {
         if(!uploaders[workerIndex]){
             workerIndex = 0;
         }
-        var currentWorker = uploaders[workerIndex];
-        if(currentWorker.total.queued) {
-            console.log('skip');
-            return workerIndex++;
-        }
-        console.log("Worker index " + workerIndex + " has started uploading");
+        var currentWorker = isWorking(workerIndex);
+        //console.log("Worker index " + workerIndex + " has started uploading");
         currentWorker.files.push(masterUploader.files[i]);
         displayFile(currentWorker, 'uploadList');
+        currentWorker.uploading = true;
         currentWorker.start();
         filesUploading++;
         workerIndex++;
@@ -112,3 +121,4 @@ document.getElementById('start-upload').onclick = function() {
   //  console.log(uploaders[i]);
   //}
 };
+
