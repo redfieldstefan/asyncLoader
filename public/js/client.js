@@ -112,7 +112,7 @@ document.getElementById('start-upload').onclick = function() {
         }
         //var currentWorker = isWorking(workerIndex);
         var currentWorker = uploaders[workerIndex];
-        if(currentWorker.total.uploaded < currentWorker.files) {
+        if(currentWorker.uploading) {
             console.log('skip');
             return workerIndex++;
         }
