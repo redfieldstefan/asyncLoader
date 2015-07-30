@@ -95,6 +95,7 @@ document.getElementById('start-upload').onclick = function() {
         if(currentWorker.total.queued) {
             return workerIndex++;
         }
+        console.log('Started ' + i);
         currentWorker.files.push(masterUploader.files[i]);
         displayFile(currentWorker, 'uploadList');
         currentWorker.start();
