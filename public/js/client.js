@@ -93,6 +93,7 @@ document.getElementById('start-upload').onclick = function() {
         }
         var currentWorker = uploaders[workerIndex];
         if(currentWorker.total.queued) {
+            console.log('skip');
             return workerIndex++;
         }
         console.log("Worker index " + workerIndex + " has started uploading");
