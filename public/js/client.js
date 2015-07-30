@@ -103,28 +103,51 @@ var isWorking = function(index) {
 
 document.getElementById('start-upload').onclick = function() {
 
-    for(var i = 0; i < masterUploader.files.length; i ++){
-        if(workerIndex === workerCount) {
+    while(masterUploader.files.length){
+      if(workerIndex === workerCount) {
             workerIndex = 0;
         }
         if(!uploaders[workerIndex]){
             workerIndex = 0;
         }
-        //var currentWorker = isWorking(workerIndex);
         var currentWorker = uploaders[workerIndex];
         if(currentWorker.uploading) {
             console.log('skip');
             return workerIndex++;
         }
         else {
-            currentWorker.files.push(masterUploader.files[i]);
+            currentWorker.files.push(masterUploader.files.shift());
             displayFile(currentWorker, 'uploadList');
             currentWorker.uploading = true;
             currentWorker.start();
             filesUploading++;
             workerIndex++;
         }
-    };
+    }
+
+
+    //for(var i = 0; i < masterUploader.files.length; i ++){
+    //    if(workerIndex === workerCount) {
+    //        workerIndex = 0;
+    //    }
+    //    if(!uploaders[workerIndex]){
+    //        workerIndex = 0;
+    //    }
+    //    //var currentWorker = isWorking(workerIndex);
+    //    var currentWorker = uploaders[workerIndex];
+    //    if(currentWorker.uploading) {
+    //        console.log('skip');
+    //        return workerIndex++;
+    //    }
+    //    else {
+    //        currentWorker.files.push(masterUploader.files[i]);
+    //        displayFile(currentWorker, 'uploadList');
+    //        currentWorker.uploading = true;
+    //        currentWorker.start();
+    //        filesUploading++;
+    //        workerIndex++;
+    //    }
+    //};
 
 
   //for(var i = 0; i < uploaders.length; i ++) {
