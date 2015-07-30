@@ -67,11 +67,15 @@ var configUploader = function(newUploader) {
     });
 
     newUploader.bind('FileUploaded', function(up) {
-        up.uploading = false;
         filesUploaded ++;
         filesUploading --;
         document.getElementById('uploaded').innerHTML = 'files uploaded: <em>' + filesUploaded + '</em>';
         document.getElementById('uploading').innerHTML = 'files uploading: <em> ' + filesUploading + '</em>';
+    });
+
+    newUploader.bind('UploadComplete', function(up) {
+        up.uploading = false;
+        console.log(up);
     });
 
     newUploader.bind('Error', function(up, err) {
@@ -84,14 +88,17 @@ masterUploader.bind('Error', function(up, err) {
 });
 
 var isWorking = function(index) {
-    if(index > uploaders.length) {
+    if(index >= uploaders.length) {
         index = 0;
     }
     if(uploaders[index].uploading){
-        console.log('skip');
+        uploaders[index].uploading;
+        //console.log(index);
         return isWorking(index + 1);
     }
-    return uploaders[index];
+    else {
+        return uploaders[index];
+    }
 };
 
 document.getElementById('start-upload').onclick = function() {
@@ -103,8 +110,12 @@ document.getElementById('start-upload').onclick = function() {
         if(!uploaders[workerIndex]){
             workerIndex = 0;
         }
-        var currentWorker = isWorking(workerIndex);
-        //console.log("Worker index " + workerIndex + " has started uploading");
+        //var currentWorker = isWorking(workerIndex);
+        var currentWorker = uploaders[workerIndex];
+        if(currentWorker.total.uploaded < currentWorker.files) {
+            console.log('skip');
+            return workerIndex++;
+        }
         currentWorker.files.push(masterUploader.files[i]);
         displayFile(currentWorker, 'uploadList');
         currentWorker.uploading = true;
