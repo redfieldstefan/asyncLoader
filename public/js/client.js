@@ -116,12 +116,14 @@ document.getElementById('start-upload').onclick = function() {
             console.log('skip');
             return workerIndex++;
         }
-        currentWorker.files.push(masterUploader.files[i]);
-        displayFile(currentWorker, 'uploadList');
-        currentWorker.uploading = true;
-        currentWorker.start();
-        filesUploading++;
-        workerIndex++;
+        else {
+            currentWorker.files.push(masterUploader.files[i]);
+            displayFile(currentWorker, 'uploadList');
+            currentWorker.uploading = true;
+            currentWorker.start();
+            filesUploading++;
+            workerIndex++;
+        }
     };
     masterUploader.files = [];
 
