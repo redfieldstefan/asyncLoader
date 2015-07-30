@@ -125,7 +125,6 @@ document.getElementById('start-upload').onclick = function() {
             workerIndex++;
         }
     };
-    masterUploader.files = [];
 
 
   //for(var i = 0; i < uploaders.length; i ++) {
