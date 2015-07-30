@@ -48,6 +48,7 @@ var buildWorkers = function(count) {
             url: '/upload'
         });
         newUploader.init();
+        newUploader.uploading = false;
         configUploader(newUploader);
         uploaders.push(newUploader);
     };
@@ -64,18 +65,29 @@ var configUploader = function(newUploader) {
 
     newUploader.bind('UploadProgress', function(up, file) {
         document.getElementById(file.id).getElementsByTagName('b')[0].innerHTML = '<span>' + file.percent + "%</span>";
+        if(file.percent === 100){
+            up.uploading = false;
+        }
     });
 
     newUploader.bind('FileUploaded', function(up) {
         filesUploaded ++;
         filesUploading --;
+        up.uploading = false;
         document.getElementById('uploaded').innerHTML = 'files uploaded: <em>' + filesUploaded + '</em>';
         document.getElementById('uploading').innerHTML = 'files uploading: <em> ' + filesUploading + '</em>';
     });
 
     newUploader.bind('UploadComplete', function(up) {
-        up.uploading = false;
-        console.log(up);
+        if(masterUploader.files.length) {
+            up.files.push(masterUploader.files.shift());
+            displayFile(up, 'uploadList');
+            up.start();
+            filesUploading++;
+        }
+        else{
+         console.log('done');
+        }
     });
 
     newUploader.bind('Error', function(up, err) {
@@ -103,52 +115,34 @@ var isWorking = function(index) {
 
 document.getElementById('start-upload').onclick = function() {
 
-    while(masterUploader.files.length){
-      if(workerIndex === workerCount) {
-            workerIndex = 0;
-        }
-        if(!uploaders[workerIndex]){
-            workerIndex = 0;
-        }
-        var currentWorker = uploaders[workerIndex];
-        if(currentWorker.uploading) {
-            console.log('skip');
-            return workerIndex++;
-        }
-        else {
-            currentWorker.files.push(masterUploader.files.shift());
-            displayFile(currentWorker, 'uploadList');
-            currentWorker.uploading = true;
-            currentWorker.start();
-            filesUploading++;
-            workerIndex++;
-        }
+
+    for(var i = 0; i < uploaders.length; i++){
+        uploaders[i].files.push(masterUploader.files.shift());
+        displayFile(uploaders[i], 'uploadList');
+        uploaders[i].start();
+        filesUploading++;
     }
-
-
-    //for(var i = 0; i < masterUploader.files.length; i ++){
-    //    if(workerIndex === workerCount) {
+    //while(masterUploader.files.length){
+    //  if(workerIndex === workerCount) {
     //        workerIndex = 0;
     //    }
     //    if(!uploaders[workerIndex]){
     //        workerIndex = 0;
     //    }
-    //    //var currentWorker = isWorking(workerIndex);
     //    var currentWorker = uploaders[workerIndex];
-    //    if(currentWorker.uploading) {
+    //    if(currentWorker.total.uploaded < currentWorker.files.length) {
     //        console.log('skip');
-    //        return workerIndex++;
+    //        workerIndex++;
     //    }
     //    else {
-    //        currentWorker.files.push(masterUploader.files[i]);
+    //        currentWorker.files.push(masterUploader.files.shift());
     //        displayFile(currentWorker, 'uploadList');
-    //        currentWorker.uploading = true;
     //        currentWorker.start();
+    //        currentWorker.uploading = true;
     //        filesUploading++;
     //        workerIndex++;
     //    }
-    //};
-
+    //}
 
   //for(var i = 0; i < uploaders.length; i ++) {
   //  document.getElementById('uploading').innerHTML = 'files uploading: ' + filesUploading;
