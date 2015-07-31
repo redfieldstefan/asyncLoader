@@ -19,7 +19,7 @@ var s3 = new AWS.S3();
 
 pluploader.on('fileUploaded', function(file, req) {
   var params = {
-        Bucket: S3_BUCKET,
+        Bucket: "asyncloader",
         Key: file.name,
         Body: file.data
   };
