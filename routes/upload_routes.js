@@ -6,7 +6,7 @@ var Pluploader = require('node-pluploader');
 var AWS = require('aws-sdk');
 var accessKeyId = process.env.AWS_ACCESS_KEY;
 var secretAccessKey = process.env.AWS_SECRET_KEY;
-var S3_BUCKET = process.env.S3_BUCKET
+var S3_BUCKET = process.env.S3_BUCKET;
 
 var pluploader = new Pluploader();
 
