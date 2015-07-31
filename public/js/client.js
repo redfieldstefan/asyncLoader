@@ -18,7 +18,7 @@ masterUploader.bind("FilesAdded", function(up, files) {
     if(uploaders.length === 0) {
         build_Workers(workerCount);
     }
-    for(var i = 0; i < files.length; i++ ){
+    for(var i = 0; i < files.length; i++ ) {
         var html = "";
         html += "<li>" + files[i].name + " (" + plupload.formatSize(files[i].size) + ") <b></b></li>";
         document.getElementById("fileList").innerHTML += html;
@@ -34,22 +34,22 @@ var build_Workers = function(count) {
         newUploader.init();
         configUploader(newUploader);
         uploaders.push(newUploader);
-    };
+    }
 };
 
-var start_uploader = function(uploader){
+var start_uploader = function(uploader) {
     uploader.files.push(masterUploader.files.shift());
     display_File(uploader, "uploadList");
     uploader.start();
     filesUploading++;
-}
+};
 
 var display_File = function(worker,listID) {
     var newFile = (worker.files.length - 1);
     var html = "";
     html += "<li id='" + worker.files[newFile].id + "'>" + worker.files[newFile].name + " (" + plupload.formatSize(worker.files[newFile].size) + ") <b></b></li>";
     document.getElementById(listID).innerHTML += html;
-}
+};
 
 var configUploader = function(newUploader) {
 
@@ -80,7 +80,6 @@ masterUploader.bind("Error", function(up, err) {
 });
 
 document.getElementById("start-upload").onclick = function() {
-
     for(var i = 0; i < uploaders.length; i++){
         start_uploader(uploaders[i]);
     }
