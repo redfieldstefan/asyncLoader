@@ -12,6 +12,7 @@ masterUploader.init();
 var filesUploading = 0;
 var filesUploaded = 0;
 var uploaders = [];
+var staged = [];
 
 masterUploader.bind("FilesAdded", function(up, files) {
     var workerCount = document.getElementById("workerCount").value;
@@ -38,7 +39,7 @@ var build_Workers = function(count) {
 };
 
 var start_uploader = function(uploader) {
-    uploader.files.push(masterUploader.files.shift());
+    uploader.files.push(staged.shift());
     display_File(uploader, "uploadList");
     uploader.start();
     filesUploading++;
@@ -65,7 +66,7 @@ var configUploader = function(newUploader) {
     });
 
     newUploader.bind("UploadComplete", function(up) {
-        if(masterUploader.files.length) {
+        if(staged.length) {
             start_uploader(up);
         }
     });
@@ -80,6 +81,9 @@ masterUploader.bind("Error", function(up, err) {
 });
 
 document.getElementById("start-upload").onclick = function() {
+    while(masterUploader.files.length){
+        staged.push(masterUploader.files.shift());
+    }
     for(var i = 0; i < uploaders.length; i++){
         start_uploader(uploaders[i]);
     }
